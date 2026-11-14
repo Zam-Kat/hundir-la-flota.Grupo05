@@ -6,10 +6,10 @@
 Este proyecto trata del clasico y muy conocido "Hundir La Flota" o como me gusta llamarlo Battleships. Primeramente lo presentamos de manera humilde con animos de sumarle nuevas funcionalidades.
 
 • Los simbolos del tablero son los siguientes:
-- **"-"** los cuales contienen agua que aun no han sido disparados.
-- **"B"** serian los Barcos
-- **"X"** para el impacto en el Barco
-- **"0"** para marcar los espacios donde ya se han disparado y fallado.
+- "💧" los cuales contienen agua que aun no han sido disparados.
+- "⬛" serian los Barcos
+- "💥" para el impacto en el Barco
+- "🛟" para marcar los espacios donde ya se han disparado y fallado.
 
 • Las dependencias necesarias son:
 - **requirements.txt**
