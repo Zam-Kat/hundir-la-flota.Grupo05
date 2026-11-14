@@ -1,4 +1,5 @@
 '''
+Qué se incluye aquí (instrucciones):
 Todas las funciones que no son metodos de `Tablero`:
 - Pedir y validar las coordenadas del jugador
 - Elegir el disparo de la maquina sin repetir casilla
@@ -19,7 +20,7 @@ columna_max = 9
 casillas_disparadas_jugador=list() #Creamos una lista donde vamos a acumular las casillas donde disparamos
 
 #pedir_coordenadas -Función que pide al jugador las coordenadas donde dispara: int, rango, que no haya vacíos
-#Uso IA: aquí he pedido ayuda a la IA para el "except ValueError as" porque no conseguía que me saltaran los errores personalizados.
+#Uso IA: aquí he pedido ayuda a la IA para el "except ValueError as" porque no conseguía que me saltaran los errores concretos.
 #mejoras pendientes:
 #- quiero que si te equivocas en la columna, no vuelva a empezar en fila, sino que te pida la columna
 def pedir_coordenadas():
@@ -41,21 +42,28 @@ def pedir_coordenadas():
             
         except ValueError as error_concreto:
             print(error_concreto)
-            print("El disparo tiene que ser un número, caer dentro del tablero y no vale repetir")
+            print("El disparo tiene que ser un número, caer dentro del tablero y no vale repetir") #Duda: ¿queremos que saque esto siempre?
 
+
+#disparo_maquina -Función que hace el disparo de la máquina: aleatorio y nunca repite casilla
+casillas_disparadas_maquina=list() #Creamos una lista donde vamos a acumular las casillas donde dispara la máquina
+def disparo_aleatorio():
+    while True:
+            fila = np.random.randint(fila_min, fila_max)
+            columna = np.random.randint(columna_min, columna_max)
+        
+            if (fila,columna) not in casillas_disparadas_maquina:            
+                casillas_disparadas_maquina.append((fila, columna))
+            return (fila, columna)
 
 #Para poder hacer pruebas, temporalmente voy a poner que se repitan los disparos un número de 3 turnos
 
 for turno in range(3):
     print (f"--------TURNO: {turno+1}--------\n")
     disparo_jugador = pedir_coordenadas()
-    print (f"\nEn el turno {turno+1} has disparado a la casilla{disparo_jugador}")
-    print(f"Historial de disparos: {casillas_disparadas_jugador}\n\n")
-
-
-#disparo_maquina -Función que hace el disparo de la máquina: aleatorio y nunca repite casilla
-
-
+    disparo_maquina =disparo_aleatorio()
+    print (f"\nEn el turno {turno+1} tú has disparado a la casilla{disparo_jugador}\nLa máquina te ha disparado a {disparo_maquina}")
+    print(f"Historial de disparos:\n- Jugador: {casillas_disparadas_jugador}\n- Máquina: {casillas_disparadas_maquina}\n\n")
 
 #mostrar_puntuacion -Función que muestra el score de puntuaciones: máquina vs jugador
 
