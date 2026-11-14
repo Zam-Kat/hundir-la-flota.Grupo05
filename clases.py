@@ -12,11 +12,13 @@ class Tablero:
       tamano (int): lado del tablero (usuario, máquina)
       tablero (np.ndarray): Barcos del jugador y disparos recibidos.
       disparos (np.ndarray): Solo los disparos recibidos, sin barcos.
+      posiciones (dict[str, lista[tuplas[int, int]]]). Se rellena en colocar_barcos() y sirve para saber qué barcos están hundidos.
     """
-    def __init__(self, id_jugador, tamano = TAMANO_TABLERO, barcos = None):
+
+    def __init__(self, id_jugador, tamano = TAMANO_TABLERO):
         self.id_jugador = id_jugador
         self.tamano = tamano
-        self.barcos = dict(BARCOS if barcos is None else barcos) #"BARCOS" viene de variables.py; se copia para no modificar el original
+        self.barcos = BARCOS #"BARCOS" viene de variables.py; se copia para no modificar el original
         self.tablero = np.full((tamano, tamano), SIMBOLOS["agua"]) #SIMBOLO viene de variables.py
         self.disparos = np.full((tamano, tamano,), SIMBOLOS["agua"])
         self.posiciones = {}
@@ -39,10 +41,55 @@ class Tablero:
         """
 
         for fila, columna in casillas:
+            # Comprobación dentro de tablero
             if not (0 <= fila < self.tamano and 0 <= columna < self.tamano):
                 return False
+            # Comprobación zona 3x3 alrededor de la casilla
             fila0, fila1 = max(fila -1, 0), min(fila + 2, self.tamano)
             columna0, columna1 = max(columna -1, 0), min(columna + 2, self.tamano)
             if (self.tablero[fila0:fila1, columna0, columna1] == SIMBOLOS["barco"]).any():
                 return False
         return True
+
+    def colocar_un_barco(self, nombre, eslora, max_intentos=100):
+        """Intenta colocar un barco en una posición aleatoria dentro del tablero.
+        
+        Prueba hasta max_intentos veces con una casilla de inicio y una orientación horizontal o vertial al azar.
+        
+        Argumentos:
+            nombre (str): nombre del barco.
+            eslora(int): número de casillas que ocupa el barco a colocar.
+            max_intentos (int): intentos máximos antes de rendirse.
+        
+        Returns:
+            bool: True si el barco se ha colocado, False si no ha encontrado sitio.
+        """
+        for intentos in range(max_intentos):
+            fila_inicial = random.randrange(self.tamano)
+            columna_inicial = random.randrange(self.tamano)
+            d_fila, d_columna = random.choice([(0,1), (1,0)]) # elige la orientación del barco al azar
+            casillas = [(fila_inicial + i * d_fila, columna_inicial + i * d_columna) for i in range(eslora)]
+            if self.cabe_barco(casillas):
+                for fila, columna in casillas:
+                    self.tablero[fila, columna] = SIMBOLOS["barco"]
+                    self.posiciones[nombre] = casillas
+                    return True
+        return False
+
+    def colocar_todos_los_barcos(self, max_reinicios = 999):
+        """Coloca todos los barcos en posiciones aleatorias
+        
+        Para cada eslora del diccionario BARCOS se colocan tantos barcos como haya- Cada barcoqueda entero dentro
+        del tablero y separado de los demás por al menos una casilla de agua tal como se ha definido en la función
+        cabe_barco. Se colocan de mayor a menor eslora, porque así es más fácil que quepan todos. Si algún barco
+        no encuentra sitio, se vacía el tablero y se vuelve a empezar, hasta un maximo de reinicios.
+        
+        Argumentos:
+            max_reinicios(int): número máximo de veces que se vacia el tablero y se empieza de nuevo. Por defecto 999
+            
+        Returns:
+            None: modifica tablero y posiciones en el propio objeto.
+            
+        Raises:
+            RuntimeError: si tras completar los reinicios determinados por max_reinicios no se han podido colocar
+            todos los barcos se lanza este error."""
