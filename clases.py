@@ -52,7 +52,8 @@ class Tablero:
         return True
 
     def colocar_un_barco(self, nombre, eslora, max_intentos=100):
-        """Intenta colocar un barco en una posición aleatoria dentro del tablero.
+        """
+        Intenta colocar un barco en una posición aleatoria dentro del tablero.
         
         Prueba hasta max_intentos veces con una casilla de inicio y una orientación horizontal o vertial al azar.
         
@@ -77,7 +78,8 @@ class Tablero:
         return False
 
     def colocar_todos_los_barcos(self, max_reinicios = 999):
-        """Coloca todos los barcos en posiciones aleatorias
+        """
+        Coloca todos los barcos en posiciones aleatorias
         
         Para cada eslora del diccionario BARCOS se colocan tantos barcos como haya- Cada barcoqueda entero dentro
         del tablero y separado de los demás por al menos una casilla de agua tal como se ha definido en la función
@@ -92,7 +94,8 @@ class Tablero:
             
         Raises:
             RuntimeError: si tras completar los reinicios determinados por max_reinicios no se han podido colocar
-            todos los barcos se lanza este error."""
+            todos los barcos se lanza este error.
+        """
         lista = [
             (f"barco{eslora}-{n}", eslora)
             for eslora, cantidad in sorted(self.barcos.items(), reverse=True)
@@ -105,3 +108,56 @@ class Tablero:
             if all(self.colocar_un_barco(n,e) for n, e in lista):
                 return
         raise RuntimeError(f"No se han podido colocar todos los barcos tras {max_reinicios} intentos")
+
+    # ------------------Disparos----------------------------
+    def recibir_disparo(self, fila_columna):
+        """
+        Procesa un disparo recibido en una casilla
+        
+        Marca el resultado en los dos tableross con SIMBOLOS ["impacto"] si había barco o SIMBOLOS["fallo"]
+        si había agua.
+
+        Argumentos:
+            fila_columna (tupla[int, int]): casilla disparada como (fila, columna), con valores de 0 a -1.
+
+        Returns:
+            str: "tocado" si había barco, "agua" si no, o "repetido" si ya se había disparado antes a esa casilla.
+
+        Raises: 
+            ValueError: si la casilla está fuera del tablero (el juego puede mostrar entonces MENSAJES["invalido"],
+            de variables.py)
+        """
+        fila, columna = fila_columna
+        if not (0 <= fila < self.tamano and 0 <= columna < self.tamano):
+            raise ValueError(MENSAJES["invalido"]) # DUDAS de si ponerlo dado que Rocio define función disparo aleatorio
+        if self.disparos[fila, columna] != SIMBOLOS["agua"]:
+            return "repetido"
+        if self.tablero[fila, columna] == SIMBOLOS["barco"]:
+            self.tablero[fila, columna] = SIMBOLOS["impacto"]
+            self.disparos[fila, columna] = SIMBOLOS["impacto"]
+            return MENSAJES["impacto"]
+        self.tablero[fila, columna] = SIMBOLOS["fallo"]
+        self.disparos[fila, columna] = SIMBOLOS["fallo"]
+        return MENSAJES["fallo"]
+
+    # ------------------Visualizacion----------------------------
+    def mostrar(self, ocultar_barcos=False):
+        """
+        Imprime el tablero por pantalla, con índices de fila y columna.
+        
+        Argumentos:
+            ocultar_barcos (bool): si es True se imprime self.disparos (sin barcos). Si es False (por defecto)
+            se imprime self.tablero.
+        
+        Returns:
+            None: solo imprime por pantalla.
+        """
+        matriz = self.disparos if ocultar_barcos else self.tablero
+        print(f"Tablero de {self. id_jugador}")
+        print("  " + " ".join(str(i) for i in range(self.tamano)))
+        print("  +" + "-" * (2 * self.tamano - 1) + "+")
+        for i, fila in enumerate(matriz):
+            print(f"{i:>2}  |" + " ".join(fila) + "|")
+        print("  +" + "-" * (2 *self.tamano - 1) + "+")
+
+    
