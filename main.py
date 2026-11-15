@@ -6,12 +6,20 @@ importando la clase Tablero, las funciones y variables del resto de archivos.
 
 from variables import MENSAJES
 from funciones import mostrar_instrucciones, pedir_coordenadas, disparo_aleatorio
+from clases import Tablero
 
 print("=" * 60)
 print(MENSAJES["bienvenido"])
 print("=" * 60)
 
 mostrar_instrucciones()
+
+tablero_jugador = Tablero("jugador")
+tablero_maquina = Tablero("maquina")
+
+# Los barcos se colocan una sola vez antes de empezar, para ambos tableros.
+tablero_jugador.colocar_todos_los_barcos()
+tablero_maquina.colocar_todos_los_barcos()
 
 turno = "jugador" # Definimos de quién es el turno antes del bucle, el jugador empieza siempre
 
