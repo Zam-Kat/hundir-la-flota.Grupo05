@@ -18,11 +18,7 @@ class Tablero:
     def __init__(self, id_jugador, tamano = TAMANO_TABLERO):
         self.id_jugador = id_jugador
         self.tamano = tamano
-<<<<<<< Updated upstream
         self.barcos = BARCOS #"BARCOS" viene de variables.py; se copia para no modificar el original
-=======
-        self.barcos = BARCOS #"BARCOS" viene de variables.py
->>>>>>> Stashed changes
         self.tablero = np.full((tamano, tamano), SIMBOLOS["agua"]) #SIMBOLO viene de variables.py
         self.disparos = np.full((tamano, tamano,), SIMBOLOS["agua"])
         self.posiciones = {}
@@ -96,8 +92,16 @@ class Tablero:
             
         Raises:
             RuntimeError: si tras completar los reinicios determinados por max_reinicios no se han podido colocar
-<<<<<<< Updated upstream
             todos los barcos se lanza este error."""
-=======
-            todos los barcos se lanza un error."""
->>>>>>> Stashed changes
+        lista = [
+            (f"barco{eslora}-{n}", eslora)
+            for eslora, cantidad in sorted(self.barcos.items(), reverse=True)
+            for n in range(1, cantidad + 1)
+        ]
+        for intentos in range(max_reinicios):
+            self.tablero[:] = SIMBOLOS["agua"]
+            self.disparos[:] = SIMBOLOS["agua"]
+            self.posiciones = {}
+            if all(self.colocar_un_barco(n,e) for n, e in lista):
+                return
+        raise RuntimeError(f"No se han podido colocar todos los barcos tras {max_reinicios} intentos")
