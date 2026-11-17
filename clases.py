@@ -1,13 +1,14 @@
 import random
 import numpy as np
 import string
+import unicodedata
 from variables import TAMANO_TABLERO, SIMBOLOS, BARCOS, MENSAJES  
 
 
 
 class Tablero:
     """
-    Tablero de cada juagador en Hundir la Flota.
+    Tablero de cada jugador en Hundir la Flota.
 
     Atributos:
       id_jugador (str): identificador del propietario del tablero.
@@ -20,7 +21,7 @@ class Tablero:
     def __init__(self, id_jugador, tamano = TAMANO_TABLERO):
         self.id_jugador = id_jugador
         self.tamano = tamano
-        self.barcos = BARCOS #"BARCOS" viene de variables.py; se copia para no modificar el original
+        self.barcos = BARCOS 
         self.tablero = np.full((tamano, tamano), SIMBOLOS["agua"]) #SIMBOLO viene de variables.py
         self.disparos = np.full((tamano, tamano,), SIMBOLOS["agua"])
         self.posiciones = {}
@@ -49,7 +50,7 @@ class Tablero:
             # Comprobación zona 3x3 alrededor de la casilla
             fila0, fila1 = max(fila -1, 0), min(fila + 2, self.tamano)
             columna0, columna1 = max(columna -1, 0), min(columna + 2, self.tamano)
-            if (self.tablero[fila0:fila1, columna0, columna1] == SIMBOLOS["barco"]).any():
+            if (self.tablero[fila0:fila1, columna0:columna1] == SIMBOLOS["barco"]).any():
                 return False
         return True
 
@@ -57,7 +58,7 @@ class Tablero:
         """
         Intenta colocar un barco en una posición aleatoria dentro del tablero.
         
-        Prueba hasta max_intentos veces con una casilla de inicio y una orientación horizontal o vertial al azar.
+        Prueba hasta max_intentos veces con una casilla de inicio y una orientación horizontal o vertical al azar.
         
         Argumentos:
             barco (str): nombre del barco.
@@ -75,21 +76,21 @@ class Tablero:
             if self.cabe_barco(casillas):
                 for fila, columna in casillas:
                     self.tablero[fila, columna] = SIMBOLOS["barco"]
-                    self.posiciones[barco] = casillas
-                    return True
+                self.posiciones[barco] = casillas
+                return True
         return False
 
     def colocar_todos_los_barcos(self, max_reinicios = 999):
         """
         Coloca todos los barcos en posiciones aleatorias
         
-        Para cada eslora del diccionario BARCOS se colocan tantos barcos como haya- Cada barcoqueda entero dentro
-        del tablero y separado de los demás por al menos una casilla de agua tal como se ha definido en la función
-        cabe_barco. Se colocan de mayor a menor eslora, porque así es más fácil que quepan todos. Si algún barco
-        no encuentra sitio, se vacía el tablero y se vuelve a empezar, hasta un maximo de reinicios.
+       Se colocan todos los barcos del diccionario BARCOS. Cada barco queda entero dentro
+       del tablero y separado de los demás por al menos una casilla de agua tal como se ha definido en la función
+       cabe_barco. Se colocan de mayor a menor eslora, porque así es más fácil que quepan todos. Si algún barco
+       no encuentra sitio, se vacía el tablero y se vuelve a empezar, hasta un máximo de reinicios.
         
         Argumentos:
-            max_reinicios(int): número máximo de veces que se vacia el tablero y se empieza de nuevo. Por defecto 999
+            max_reinicios(int): número máximo de veces que se vacía el tablero y se empieza de nuevo. Por defecto 999
             
         Returns:
             None: modifica tablero y posiciones en el propio objeto.
@@ -98,11 +99,7 @@ class Tablero:
             RuntimeError: si tras completar los reinicios determinados por max_reinicios no se han podido colocar
             todos los barcos se lanza este error.
         """
-        lista = [
-            (f"barco{eslora}-{n}", eslora)
-            for eslora, cantidad in sorted(self.barcos.items(), reverse=True)
-            for n in range(1, cantidad + 1)
-        ]
+        lista = sorted(self.barcos.items(), key=lambda b: b[1], reverse=True)
         for intentos in range(max_reinicios):
             self.tablero[:] = SIMBOLOS["agua"]
             self.disparos[:] = SIMBOLOS["agua"]
@@ -116,14 +113,14 @@ class Tablero:
         """
         Procesa un disparo recibido en una casilla
         
-        Marca el resultado en los dos tableross con SIMBOLOS ["impacto"] si había barco o SIMBOLOS["fallo"]
+        Marca el resultado en los dos tableros con SIMBOLOS ["impacto"] si había barco o SIMBOLOS["fallo"]
         si había agua.
 
         Argumentos:
-            fila_columna (tupla[int, int]): casilla disparada como (fila, columna), con valores de 0 a -1.
+            fila_columna (tupla[int, int]): casilla disparada como (fila, columna), con valores de 0 a tamano -1.
 
         Returns:
-            str: "tocado" si había barco, "agua" si no, o "repetido" si ya se había disparado antes a esa casilla.
+            str: el texto de MENSAJES en variables.py ("impacto", "fallo" o "repetido")
 
         Raises: 
             ValueError: si la casilla está fuera del tablero (el juego puede mostrar entonces MENSAJES["invalido"],
@@ -133,7 +130,7 @@ class Tablero:
         if not (0 <= fila < self.tamano and 0 <= columna < self.tamano):
             raise ValueError(MENSAJES["invalido"]) # DUDAS de si ponerlo dado que Rocio define función disparo aleatorio
         if self.disparos[fila, columna] != SIMBOLOS["agua"]:
-            return "repetido"
+            return MENSAJES["repetido"]
         if self.tablero[fila, columna] == SIMBOLOS["barco"]:
             self.tablero[fila, columna] = SIMBOLOS["impacto"]
             self.disparos[fila, columna] = SIMBOLOS["impacto"]
@@ -162,7 +159,7 @@ class Tablero:
             barco (str): nombre del barco (clave de posiciones).
         
         Returns: 
-            bool: True si todas las casiilas del barco están tocadas.
+            bool: True si todas las casillas del barco están tocadas.
         """
 
         return all(self.tablero[fila, columna] == SIMBOLOS["impacto"]
@@ -184,12 +181,12 @@ class Tablero:
         Returns:
             lista[str]: nombres de los barcos hundidos.
         """
-        return[barco for barco in self.posiciones if self.barco_hundido(barco)]
+        return [barco for barco in self.posiciones if self.barco_hundido(barco)]
     
     # ------------------Visualizacion----------------------------
     def mostrar(self, ocultar_barcos=False):
         """
-        Imprime el tablero por pantalla, con índices de fila y columna.
+        Imprime el tablero por pantalla, con letras en las columnas y números en las filas.
         
         Argumentos:
             ocultar_barcos (bool): si es True se imprime self.disparos (sin barcos). Si es False (por defecto)
@@ -201,14 +198,20 @@ class Tablero:
         if ocultar_barcos:
             matriz = self.disparos 
         else:
-            self.tablero
+            matriz = self.tablero
+        # Los emojis de SIMBOLOS ocupan 2 columnas en pantalla y los caracteres normales 1 
+        ancho = 2 if unicodedata.east_asian_width(SIMBOLOS["agua"]) in "WF" else 1
+        letras = string.ascii_uppercase[: self.tamano]
+        if ancho == 2:
+            # Letras de ancho completo (A, B, C...): ocupan 2 columnas, igual que un emoji
+            letras = [chr(ord(letra) + 0xFEE0) for letra in letras]
         print(f"Tablero de {self.id_jugador}")
-        # Cabecera con letras (A, B, C... para las columnas. Help IA)
-        print("   " + " ".join(string.ascii_uppercase[: self.tamano]))
-        print("  +" + "-" * (2 * self.tamano - 1) + "+")
+        # Cabecera con letras (A, B, C... para las columnas. 5 espacios Help IA)
+        print("     " + " ".join(letras))
         # Marco para los laterales para ayudar con la visualización (help IA)
         for i, fila in enumerate(matriz):
             print(f"{i:>2}  |" + " ".join(fila) + "|")
-        print("  +" + "-" * (2 *self.tamano - 1) + "+")
+        
+    # ------------------testeo----------------------------
 
     
