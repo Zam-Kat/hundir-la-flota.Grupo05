@@ -27,11 +27,25 @@ while True: # Cada vuelta del bucle es un disparo
 
     if turno == "jugador":
         print(MENSAJES["turno_jugador"])
+
+        tablero_jugador.mostrar()
+        tablero_maquina.mostrar(ocultar_barcos = True)
+
         disparo_jugador = pedir_coordenadas()
         fila = disparo_jugador[0]
         columna = disparo_jugador[1]
 
-        turno = "maquina" # De momento el turno cambia siempre, falta que repita si acierta
+        resultado_disparo = tablero_maquina.recibir_disparo(fila,columna)
+        print(MENSAJES["impacto"],resultado_disparo)
+
+        if resultado_disparo == MENSAJES["impacto"]: # Si el disparo acierta vuelves a disparar, a menos que ya no queden barcos y hayas ganado
+
+            if tablero_maquina.quedan_barcos() == False:
+                print(MENSAJES["victoria"])
+                break
+
+        elif resultado_disparo == MENSAJES["fallo"]: # Si el disparo ha fallado, el turno pasa a ser de la máquina
+            turno = "maquina"
 
     else:
         print(MENSAJES["turno_maquina"])
@@ -39,5 +53,4 @@ while True: # Cada vuelta del bucle es un disparo
         fila = disparo_maquina[0]
         columna = disparo_maquina[1]
         print(f"La máquina ha disparado a la casilla: {fila, columna}")
-
         turno = "jugador"
