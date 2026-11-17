@@ -47,10 +47,23 @@ while True: # Cada vuelta del bucle es un disparo
         elif resultado_disparo == MENSAJES["fallo"]: # Si el disparo ha fallado, el turno pasa a ser de la máquina
             turno = "maquina"
 
-    else:
+    else: # El turno de la máquina, funciona igual que el turno de jugador pero disparando a tu tablero
         print(MENSAJES["turno_maquina"])
+
         disparo_maquina = disparo_aleatorio()
         fila = disparo_maquina[0]
         columna = disparo_maquina[1]
+
         print(f"La máquina ha disparado a la casilla: {fila, columna}")
-        turno = "jugador"
+
+        resultado_disparo = tablero_jugador.recibir_disparo(fila,columna)
+        print(MENSAJES["impacto"],resultado_disparo)
+
+        if resultado_disparo == MENSAJES["impacto"]:
+
+            if tablero_jugador.quedan_barcos() == False:
+                print(MENSAJES["derrota"])
+                break
+
+        elif resultado_disparo == MENSAJES["fallo"]:
+            turno = "jugador"
