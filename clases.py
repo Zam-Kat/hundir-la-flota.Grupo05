@@ -1,5 +1,7 @@
 import random
 import numpy as np
+import string
+from variables import TAMANO_TABLERO, SIMBOLOS, BARCOS, MENSAJES  
 
 
 
@@ -51,14 +53,14 @@ class Tablero:
                 return False
         return True
 
-    def colocar_un_barco(self, nombre, eslora, max_intentos=100):
+    def colocar_un_barco(self, barco, eslora, max_intentos=100):
         """
         Intenta colocar un barco en una posición aleatoria dentro del tablero.
         
         Prueba hasta max_intentos veces con una casilla de inicio y una orientación horizontal o vertial al azar.
         
         Argumentos:
-            nombre (str): nombre del barco.
+            barco (str): nombre del barco.
             eslora(int): número de casillas que ocupa el barco a colocar.
             max_intentos (int): intentos máximos antes de rendirse.
         
@@ -73,7 +75,7 @@ class Tablero:
             if self.cabe_barco(casillas):
                 for fila, columna in casillas:
                     self.tablero[fila, columna] = SIMBOLOS["barco"]
-                    self.posiciones[nombre] = casillas
+                    self.posiciones[barco] = casillas
                     return True
         return False
 
@@ -140,6 +142,50 @@ class Tablero:
         self.disparos[fila, columna] = SIMBOLOS["fallo"]
         return MENSAJES["fallo"]
 
+    # ------------------Consultas (opcional)---------------------
+    def quedan_barcos(self):
+        """
+        Indica si al jugador le queda algún barco sin tocar.
+        
+        Sirve para detectar el final de la partida: cuando devuelve False, el jugador ha perdido.
+        
+        Returns:
+            bool: True si aún hay casillas de barco sin tocar, False si no.
+        """
+        return bool((self.tablero == SIMBOLOS["barco"]).any())
+
+    def barco_hundido(self, barco):
+        """
+        Indica si un barco concreto está hundido.
+        
+        Argumentos:
+            barco (str): nombre del barco (clave de posiciones).
+        
+        Returns: 
+            bool: True si todas las casiilas del barco están tocadas.
+        """
+
+        return all(self.tablero[fila, columna] == SIMBOLOS["impacto"]
+                   for fila, columna in self.posiciones[barco])
+
+    def barcos_restantes(self):
+        """
+        Devuelve los nombres de los barcos que aún no están hundidos.
+        
+        Returns:
+            lista[str]: nombres de los barcos sin hundir.
+        """
+        return [barco for barco in self.posiciones if not self.barco_hundido(barco)]
+
+    def barcos_hundidos(self):
+        """
+        Devuelve los nombres de los barcos que se han hundido.
+        
+        Returns:
+            lista[str]: nombres de los barcos hundidos.
+        """
+        return[barco for barco in self.posiciones if self.barco_hundido(barco)]
+    
     # ------------------Visualizacion----------------------------
     def mostrar(self, ocultar_barcos=False):
         """
@@ -152,10 +198,15 @@ class Tablero:
         Returns:
             None: solo imprime por pantalla.
         """
-        matriz = self.disparos if ocultar_barcos else self.tablero
-        print(f"Tablero de {self. id_jugador}")
-        print("  " + " ".join(str(i) for i in range(self.tamano)))
+        if ocultar_barcos:
+            matriz = self.disparos 
+        else:
+            self.tablero
+        print(f"Tablero de {self.id_jugador}")
+        # Cabecera con letras (A, B, C... para las columnas. Help IA)
+        print("   " + " ".join(string.ascii_uppercase[: self.tamano]))
         print("  +" + "-" * (2 * self.tamano - 1) + "+")
+        # Marco para los laterales para ayudar con la visualización (help IA)
         for i, fila in enumerate(matriz):
             print(f"{i:>2}  |" + " ".join(fila) + "|")
         print("  +" + "-" * (2 *self.tamano - 1) + "+")
