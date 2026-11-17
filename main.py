@@ -32,38 +32,34 @@ while True: # Cada vuelta del bucle es un disparo
         tablero_maquina.mostrar(ocultar_barcos = True)
 
         disparo_jugador = pedir_coordenadas()
-        fila = disparo_jugador[0]
-        columna = disparo_jugador[1]
 
-        resultado_disparo = tablero_maquina.recibir_disparo(fila,columna)
-        print(MENSAJES["impacto"],resultado_disparo)
+        resultado_jugador = tablero_maquina.recibir_disparo(disparo_jugador)
+        print(resultado_jugador)
 
-        if resultado_disparo == MENSAJES["impacto"]: # Si el disparo acierta vuelves a disparar, a menos que ya no queden barcos y hayas ganado
+        if resultado_jugador == MENSAJES["impacto"]: # Si el disparo acierta vuelves a disparar, a menos que ya no queden barcos y hayas ganado
 
             if tablero_maquina.quedan_barcos() == False:
                 print(MENSAJES["victoria"])
                 break
 
-        elif resultado_disparo == MENSAJES["fallo"]: # Si el disparo ha fallado, el turno pasa a ser de la máquina
+        elif resultado_jugador == MENSAJES["fallo"]: # Si el disparo ha fallado, el turno pasa a ser de la máquina
             turno = "maquina"
 
     else: # El turno de la máquina, funciona igual que el turno de jugador pero disparando a tu tablero
         print(MENSAJES["turno_maquina"])
 
         disparo_maquina = disparo_aleatorio()
-        fila = disparo_maquina[0]
-        columna = disparo_maquina[1]
 
-        print(f"La máquina ha disparado a la casilla: {fila, columna}")
+        print(f"La máquina ha disparado a la casilla: {disparo_maquina}")
 
-        resultado_disparo = tablero_jugador.recibir_disparo(fila,columna)
-        print(MENSAJES["impacto"],resultado_disparo)
+        resultado_maquina = tablero_jugador.recibir_disparo(disparo_maquina)
+        print(resultado_maquina)
 
-        if resultado_disparo == MENSAJES["impacto"]:
+        if resultado_maquina == MENSAJES["impacto"]:
 
             if tablero_jugador.quedan_barcos() == False:
                 print(MENSAJES["derrota"])
                 break
 
-        elif resultado_disparo == MENSAJES["fallo"]:
+        elif resultado_maquina == MENSAJES["fallo"]:
             turno = "jugador"
