@@ -7,17 +7,11 @@ Todas las funciones que no son metodos de `Tablero`:
 '''
 import numpy as np
 import random
-
-# CONFIG
-# Tamaño tablero: pendiente ver cómo lo define Samuel
-# Definimos valores mínimos y máximos del tablero, por si cambian sus dimensiones en el futuro
-fila_min = 0
-fila_max = 9
-columna_min = 0
-columna_max = 9
+from variables import MENSAJES, TAMANO_TABLERO
+#print(MENSAJES["nombre_mensaje"])
 
 
-casillas_disparadas_jugador=list() #Creamos una lista donde vamos a acumular las casillas donde disparamos
+#casillas_disparadas_jugador=list() Esta lista tiene que venir de variables.py
 
 #pedir_coordenadas -Función que pide al jugador las coordenadas donde dispara: int, rango, que no haya vacíos
 #Uso IA: aquí he pedido ayuda a la IA para el "except ValueError as" porque no conseguía que me saltaran los errores concretos.
@@ -26,16 +20,13 @@ casillas_disparadas_jugador=list() #Creamos una lista donde vamos a acumular las
 def pedir_coordenadas():
     while True:
         try:
-            fila = int(input("Introduce la fila del disparo: "))
-            if fila < fila_min or fila > fila_max:
-                raise ValueError(f"\nCuidado, ¡te has salido del tablero! La fila debe estar entre {fila_min} y {fila_max}") #error_concreto de fuera de rango
-            
-            columna = int(input("Introduce la columna del disparo: "))
-            if columna < columna_min or columna > columna_max:
-                raise ValueError(f"\nCuidado, ¡te has salido del tablero! La columna debe estar entre {columna_min} y {columna_max}") #error_concreto de fuera de rango
+            fila = int(input("Coordenadas fila:"))
+            columna = int(input("Coordenadas columna:")) #Unificar input fila y columna
+            if fila < 0 or fila > TAMANO_TABLERO or columna < 0 or columna > TAMANO_TABLERO 
+                raise ValueError(MENSAJES["invalido"]) #error_concreto de fuera de rango
 
             if (fila,columna) in casillas_disparadas_jugador:
-                raise ValueError(f"\nYa has disparado a la casilla ({fila},{columna}), prueba otra") #error_concreto de casilla repetida
+                raise ValueError(MENSAJES["repetido"]) #error_concreto de casilla repetida
             
             casillas_disparadas_jugador.append((fila, columna))
             return (fila, columna)
@@ -77,8 +68,6 @@ que sea breve, original y divertido, estilo "bienvenida al juego donde tienes qu
 ¿Me puedes dar el texto para los distintos prints?
 '''
 def mostrar_instrucciones():
-    mostrar = input("Si quieres recordar las reglas del juego, pulsa 0")
-    if mostrar == 0:
         print("=" * 60)
         print(" ⚓ ¡BIENVENIDO AL COMBATE NAVAL, COMANDANTE! ⚓ ")
         print("=" * 60)
