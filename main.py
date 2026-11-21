@@ -54,10 +54,12 @@ while True: # Cada vuelta del bucle es un disparo
 
         disparo_jugador = pedir_coordenadas()
 
+        hundidos_antes = len(tablero_maquina.barcos_hundidos()) # Cuenta barcos hundidos antes del disparo
+
+
         resultado_jugador = tablero_maquina.recibir_disparo(disparo_jugador)
         print(resultado_jugador)
 
-        hundidos_antes = len(tablero_maquina.barcos_hundidos()) # Cuenta barcos hundidos antes del disparo
 
 
         if resultado_jugador == MENSAJES["impacto"]: # Si el disparo acierta vuelves a disparar, a menos que ya no queden barcos y hayas ganado
@@ -87,14 +89,14 @@ while True: # Cada vuelta del bucle es un disparo
 
         print(f"La máquina ha disparado a la casilla: {disparo_maquina}")
 
-        hundidos_antes = len(tablero_maquina.barcos_hundidos())
+        hundidos_antes = len(tablero_jugador.barcos_hundidos())
 
 
         resultado_maquina = tablero_jugador.recibir_disparo(disparo_maquina)
         print(resultado_maquina)
 
         if resultado_maquina == MENSAJES["impacto"]:
-            if len(tablero_maquina.barcos_hundidos()) > hundidos_antes:
+            if len(tablero_jugador.barcos_hundidos()) > hundidos_antes: # Tocado y hundido, funciona igual que para jugador
                 print("Tocado y hundido!")
 
             if tablero_jugador.quedan_barcos() == False:
