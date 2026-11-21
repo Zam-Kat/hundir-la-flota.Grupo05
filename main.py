@@ -9,7 +9,7 @@ from funciones import mostrar_instrucciones, pedir_coordenadas, disparo_aleatori
 from clases import Tablero
 
 print("=" * 60)
-print(MENSAJES["bienvenido"])
+print(MENSAJES["bienvenido"].center(60))
 print("=" * 60)
 
 mostrar_instrucciones()
@@ -26,7 +26,10 @@ turno = "jugador" # Definimos de quién es el turno antes del bucle, el jugador 
 while True: # Cada vuelta del bucle es un disparo
 
     if turno == "jugador":
-        print(MENSAJES["turno_jugador"])
+
+        print("\n" + "=" * 60)
+        print(MENSAJES["turno_jugador"].center(60))
+        print("=" * 60)
 
         tablero_jugador.mostrar()
         tablero_maquina.mostrar(ocultar_barcos = True)
@@ -39,14 +42,19 @@ while True: # Cada vuelta del bucle es un disparo
         if resultado_jugador == MENSAJES["impacto"]: # Si el disparo acierta vuelves a disparar, a menos que ya no queden barcos y hayas ganado
 
             if tablero_maquina.quedan_barcos() == False:
-                print(MENSAJES["victoria"])
+                print("\n" + "=" * 60)
+                print(MENSAJES["victoria"].center(60))
+                print("=" * 60)
                 break
 
         elif resultado_jugador == MENSAJES["fallo"]: # Si el disparo ha fallado, el turno pasa a ser de la máquina
             turno = "maquina"
 
     else: # El turno de la máquina, funciona igual que el turno de jugador pero disparando a tu tablero
-        print(MENSAJES["turno_maquina"])
+        print("\n" + "=" * 60)
+        print(MENSAJES["turno_maquina"].center(60))
+        print("=" * 60)
+
 
         disparo_maquina = disparo_aleatorio()
 
@@ -58,8 +66,11 @@ while True: # Cada vuelta del bucle es un disparo
         if resultado_maquina == MENSAJES["impacto"]:
 
             if tablero_jugador.quedan_barcos() == False:
-                print(MENSAJES["derrota"])
+                print("\n" + "=" * 60)
+                print(MENSAJES["derrota"].center(60))
+                print("=" * 60)
                 break
 
         elif resultado_maquina == MENSAJES["fallo"]:
+            input("\nPulsa Enter para continuar...") # Pausa para cambio de turno
             turno = "jugador"
