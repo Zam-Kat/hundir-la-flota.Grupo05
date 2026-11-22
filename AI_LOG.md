@@ -2,7 +2,7 @@
 
 Este registro no cuenta para la nota. Sirve para ver dónde vais solos y dónde os apoyáis. Si no habéis usado IA en una parte, dejad el nivel en 0: también es un dato útil.
 
-**Grupo:** (nombres)
+**Grupo:** Lluis Hernandez, Rocío Moya, Óscar Hernández, Samuel Zuccato
 
 **Herramientas usadas:** (ChatGPT, Claude, Gemini, Copilot, autocompletado de VS Code... o ninguna)
 
@@ -14,11 +14,11 @@ Niveles: **0** sin IA · **1** consulta puntual, el código es nuestro · **2** 
 
 | Módulo | Quién lo ha llevado | Nivel de IA (0-3) | Nº de prompts | ¿Lo podríais repetir sin IA? (sí / en parte / no) |
 |---|---|---|---|---|
-| `variables.py` | | | | |
-| `clases.py` | | | | |
-| `funciones.py` | | | | |
-| `main.py` | | | | |
-| `README.md` | | | | |
+| `variables.py` | Samuel Z| | | |
+| `clases.py` | Lluis Hernanez | | | |
+| `funciones.py` | Rocío Moya | | | |
+| `main.py` | Óscar Hernández | | | |
+| `README.md` | Samuel Zuccato | | | |
 
 ## Registro de prompts
 
