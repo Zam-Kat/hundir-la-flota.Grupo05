@@ -16,9 +16,9 @@ BARCOS = {
 
 SIMBOLOS = {
     "agua" : "💧",
-    "barco" : "⬛",
+    "barco" : "⬜",
     "impacto" : "💥",
-    "fallo" : "🛟"
+    "fallo" : "👎"
 }
 
 MENSAJES = {
@@ -26,12 +26,14 @@ MENSAJES = {
     "turno_jugador" : "Es tu turno",
     "turno_maquina" : "Es el turno de la maquina!",
     "impacto" : "BIEN! Le diste!!",
+    "impacto_maquina" : "Auch, Capitán Iván te ha dado!!",
     "fallo" : "Fallaste, le diste al agua!",
+    "fallo_maquina" : "La maquina falló, le dió al agua!",
     "repetido" : "Ya has disparado a esta posicion, intenta de nuevo!",
     "invalido" : "Coordenadas incorrectas, te saliste del tablero.",
     "victoria" : "Muy bien, has ganado!",
     "derrota" : "Mal ahí, perdiste. Te ha derrotado el capitan Ivan Nosuspende!"
 }
 
-casillas_disparadas_jugador = ()
-casillas_disparadas_maquina = ()
+casillas_disparadas_jugador = []
+casillas_disparadas_maquina = []
