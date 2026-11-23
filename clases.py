@@ -140,7 +140,7 @@ class Tablero:
         return MENSAJES["fallo"]
 
     # ------------------Consultas (opcional)---------------------
-    def quedan_barcos(self):
+    #def quedan_barcos(self):
         """
         Indica si al jugador le queda algún barco sin tocar.
         
@@ -151,7 +151,7 @@ class Tablero:
         """
         return bool((self.tablero == SIMBOLOS["barco"]).any())
 
-    def barco_hundido(self, barco):
+    #def barco_hundido(self, barco):
         """
         Indica si un barco concreto está hundido.
         
@@ -165,7 +165,7 @@ class Tablero:
         return all(self.tablero[fila, columna] == SIMBOLOS["impacto"]
                    for fila, columna in self.posiciones[barco])
 
-    def barcos_restantes(self):
+    #def barcos_restantes(self):
         """
         Devuelve los nombres de los barcos que aún no están hundidos.
         
@@ -174,7 +174,7 @@ class Tablero:
         """
         return [barco for barco in self.posiciones if not self.barco_hundido(barco)]
 
-    def barcos_hundidos(self):
+    #def barcos_hundidos(self):
         """
         Devuelve los nombres de los barcos que se han hundido.
         
