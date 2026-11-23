@@ -47,7 +47,7 @@ while True: # Cada vuelta del bucle es un disparo
 
 
         barcos_maquina = len(tablero_maquina.barcos_restantes()) # Contador de barcos que le quedan a la máquina
-        print(f"A la máquina le quedan {barcos_maquina} barcos")
+        print(f"A la máquina le quedan {barcos_maquina} barcos\n")
 
         tablero_jugador.mostrar()
         tablero_maquina.mostrar(ocultar_barcos = True)
@@ -58,7 +58,7 @@ while True: # Cada vuelta del bucle es un disparo
 
 
         resultado_jugador = tablero_maquina.recibir_disparo(disparo_jugador)
-        print(resultado_jugador)
+        print("\n" + resultado_jugador)
 
 
 
@@ -70,7 +70,7 @@ while True: # Cada vuelta del bucle es un disparo
             if tablero_maquina.quedan_barcos() == False:
                 print("\n" + "=" * 60)
                 print(MENSAJES["victoria"].center(60))
-                print("=" * 60)
+                print("=" * 60  + "\n")
 
                 tablero_jugador.mostrar() # Mostramos los dos tableros al final de cada partida, lo mismo cuando pierdes
                 tablero_maquina.mostrar()
@@ -82,7 +82,7 @@ while True: # Cada vuelta del bucle es un disparo
     else: # El turno de la máquina, funciona igual que el turno de jugador pero disparando a tu tablero
         print("\n" + "=" * 60)
         print(MENSAJES["turno_maquina"].center(60))
-        print("=" * 60)
+        print("=" * 60 + "\n")
 
 
         disparo_maquina = disparo_aleatorio()
@@ -92,10 +92,10 @@ while True: # Cada vuelta del bucle es un disparo
         hundidos_antes = len(tablero_jugador.barcos_hundidos())
 
 
-        resultado_maquina = tablero_jugador.recibir_disparo(disparo_maquina)
+        resultado_maquina = tablero_jugador.recibir_disparo(disparo_maquina, es_maquina = True)
         print(resultado_maquina)
 
-        if resultado_maquina == MENSAJES["impacto"]:
+        if resultado_maquina == MENSAJES["impacto_maquina"]:
             if len(tablero_jugador.barcos_hundidos()) > hundidos_antes: # Tocado y hundido, funciona igual que para jugador
                 print("Tocado y hundido!")
 
@@ -109,6 +109,6 @@ while True: # Cada vuelta del bucle es un disparo
                 break
 
 
-        elif resultado_maquina == MENSAJES["fallo"]:
+        elif resultado_maquina == MENSAJES["fallo_maquina"]:
             input("\nPulsa Enter para continuar...") # Pausa para cambio de turno
             turno = "jugador"
