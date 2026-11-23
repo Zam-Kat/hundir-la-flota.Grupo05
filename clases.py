@@ -109,7 +109,7 @@ class Tablero:
         raise RuntimeError(f"No se han podido colocar todos los barcos tras {max_reinicios} intentos")
 
     # ------------------Disparos----------------------------
-    def recibir_disparo(self, fila_columna):
+    def recibir_disparo(self, fila_columna, es_maquina = False):
         """
         Procesa un disparo recibido en una casilla
         
@@ -120,7 +120,7 @@ class Tablero:
             fila_columna (tupla[int, int]): casilla disparada como (fila, columna), con valores de 0 a tamano -1.
 
         Returns:
-            str: el texto de MENSAJES en variables.py ("impacto", "fallo" o "repetido")
+            str: el texto de MENSAJES en variables.py 
 
         Raises: 
             ValueError: si la casilla está fuera del tablero (el juego puede mostrar entonces MENSAJES["invalido"],
@@ -128,19 +128,20 @@ class Tablero:
         """
         fila, columna = fila_columna
         if not (0 <= fila < self.tamano and 0 <= columna < self.tamano):
-            raise ValueError(MENSAJES["invalido"]) # DUDAS de si ponerlo dado que Rocio define función disparo aleatorio
+            raise ValueError(MENSAJES["invalido"]) 
         if self.disparos[fila, columna] != SIMBOLOS["agua"]:
             return MENSAJES["repetido"]
         if self.tablero[fila, columna] == SIMBOLOS["barco"]:
             self.tablero[fila, columna] = SIMBOLOS["impacto"]
             self.disparos[fila, columna] = SIMBOLOS["impacto"]
-            return MENSAJES["impacto"]
-        self.tablero[fila, columna] = SIMBOLOS["fallo"]
-        self.disparos[fila, columna] = SIMBOLOS["fallo"]
-        return MENSAJES["fallo"]
+            return MENSAJES["impacto_maquina"] if es_maquina else MENSAJES["impacto"]
+        else:
+            self.tablero[fila, columna] = SIMBOLOS["fallo"]
+            self.disparos[fila, columna] = SIMBOLOS["fallo"]
+            return MENSAJES["fallo_maquina"] if es_maquina else MENSAJES["fallo"]
 
     # ------------------Consultas (opcional)---------------------
-    #def quedan_barcos(self):
+    def quedan_barcos(self):
         """
         Indica si al jugador le queda algún barco sin tocar.
         
@@ -151,7 +152,7 @@ class Tablero:
         """
         return bool((self.tablero == SIMBOLOS["barco"]).any())
 
-    #def barco_hundido(self, barco):
+    def barco_hundido(self, barco):
         """
         Indica si un barco concreto está hundido.
         
@@ -165,7 +166,7 @@ class Tablero:
         return all(self.tablero[fila, columna] == SIMBOLOS["impacto"]
                    for fila, columna in self.posiciones[barco])
 
-    #def barcos_restantes(self):
+    def barcos_restantes(self):
         """
         Devuelve los nombres de los barcos que aún no están hundidos.
         
@@ -174,7 +175,7 @@ class Tablero:
         """
         return [barco for barco in self.posiciones if not self.barco_hundido(barco)]
 
-    #def barcos_hundidos(self):
+    def barcos_hundidos(self):
         """
         Devuelve los nombres de los barcos que se han hundido.
         
@@ -186,7 +187,7 @@ class Tablero:
     # ------------------Visualizacion----------------------------
     def mostrar(self, ocultar_barcos=False):
         """
-        Imprime el tablero por pantalla, con letras en las columnas y números en las filas.
+        Imprime el tablero por pantalla, con números en las columnas y en las filas.
         
         Argumentos:
             ocultar_barcos (bool): si es True se imprime self.disparos (sin barcos). Si es False (por defecto)
@@ -201,13 +202,13 @@ class Tablero:
             matriz = self.tablero
         # Los emojis de SIMBOLOS ocupan 2 columnas en pantalla y los caracteres normales 1 
         ancho = 2 if unicodedata.east_asian_width(SIMBOLOS["agua"]) in "WF" else 1
-        letras = string.ascii_uppercase[: self.tamano]
+        numeros = [str(i % 10) for i in range(self.tamano)]
         if ancho == 2:
-            # Letras de ancho completo (A, B, C...): ocupan 2 columnas, igual que un emoji
-            letras = [chr(ord(letra) + 0xFEE0) for letra in letras]
+            # Números de ancho completo (0, 1, 2...): ocupan 2 columnas, igual que un emoji
+            numeros = [chr(ord(numeros) + 0xFEE0) for numero in numeros]
         print(f"Tablero de {self.id_jugador}")
-        # Cabecera con letras (A, B, C... para las columnas. 5 espacios Help IA)
-        print("     " + " ".join(letras))
+        # Cabecera con números (0, 1, 2... para las columnas. 5 espacios Help IA)
+        print("     " + " ".join(numeros))
         # Marco para los laterales para ayudar con la visualización (help IA)
         for i, fila in enumerate(matriz):
             print(f"{i:>2}  |" + " ".join(fila) + "|")
