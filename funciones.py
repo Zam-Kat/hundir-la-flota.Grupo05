@@ -8,15 +8,14 @@ Todas las funciones que no son metodos de `Tablero`:
 import numpy as np
 import random
 from variables import MENSAJES, TAMANO_TABLERO
-#print(MENSAJES["nombre_mensaje"])
+from clases import recibir_disparo
+# ejemplo de como traer: print(MENSAJES["nombre_mensaje"])
 
 
 #casillas_disparadas_jugador=list() Esta lista tiene que venir de variables.py
 
 #pedir_coordenadas -Función que pide al jugador las coordenadas donde dispara: int, rango, que no haya vacíos
 #Uso IA: aquí he pedido ayuda a la IA para el "except ValueError as" porque no conseguía que me saltaran los errores concretos.
-#mejoras pendientes:
-#- quiero que si te equivocas en la columna, no vuelva a empezar en fila, sino que te pida la columna
 def pedir_coordenadas():
     while True:
         try:
@@ -50,14 +49,13 @@ def disparo_aleatorio():
 
 
 #mostrar_puntuacion -Función que muestra el score de puntuaciones: máquina vs jugador
-#Aquí depende de como Lluis configure el nombre de la variable de aciertos
-aciertos_jugador = 3
-aciertos_maquina = 2
-def mostrar_puntuacion():
-    print("     MARCADOR\n")
-    print(f"- Jugador: {aciertos_jugador} puntos")
-    print(f"- Máquina: {aciertos_maquina} puntos")
-    print(f"Total disparos: {len(casillas_disparadas_jugador)}")
+#aciertos_jugador = 3
+#aciertos_maquina = 2
+#def mostrar_puntuacion():
+#    print("     MARCADOR\n")
+#    print(f"- Jugador: {aciertos_jugador} puntos")
+#    print(f"- Máquina: {aciertos_maquina} puntos")
+#    print(f"Total disparos: {len(casillas_disparadas_jugador)}")
 
 #mostrar_instrucciones -Función que imprime las instrucciones
 '''
@@ -68,9 +66,6 @@ que sea breve, original y divertido, estilo "bienvenida al juego donde tienes qu
 ¿Me puedes dar el texto para los distintos prints?
 '''
 def mostrar_instrucciones():
-        print("=" * 60)
-        print(" ⚓ ¡BIENVENIDO AL COMBATE NAVAL, COMANDANTE! ⚓ ")
-        print("=" * 60)
         print(
         "Estás a punto de enfrentarte en una versión táctica y directa"
         " contra la máquina."
