@@ -109,14 +109,3 @@ def mostrar_instrucciones():
         print("=" * 60)
     else:
         print("Ok, si no tienes dudas, ¡seguimos con el juego!")
-
-#Para poder hacer pruebas, temporalmente voy a poner que se repitan los disparos un número de 3 turnos
-for turno in range(3):
-    print (f"--------TURNO: {turno+1}--------\n")
-    disparo_jugador = pedir_coordenadas()
-    disparo_maquina =disparo_aleatorio()
-    print (f"\nEn el turno {turno+1} tú has disparado a la casilla{disparo_jugador}\nLa máquina te ha disparado a {disparo_maquina}")
-    print(f"Historial de disparos:\n- Jugador: {casillas_disparadas_jugador}\n- Máquina: {casillas_disparadas_maquina}\n\n")
-print("FIN DE LA RONDA:\n")
-print(mostrar_puntuacion())
-print(mostrar_instrucciones())
