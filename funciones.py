@@ -7,8 +7,7 @@ Todas las funciones que no son metodos de `Tablero`:
 '''
 import numpy as np
 import random
-from variables import MENSAJES, TAMANO_TABLERO
-from clases import recibir_disparo
+from variables import MENSAJES, TAMANO_TABLERO, casillas_disparadas_jugador, casillas_disparadas_maquina
 # ejemplo de como traer: print(MENSAJES["nombre_mensaje"])
 
 
@@ -21,15 +20,15 @@ def pedir_coordenadas():
         try:
             fila = int(input("Coordenadas fila:"))
             columna = int(input("Coordenadas columna:")) #Unificar input fila y columna
-            if fila < 0 or fila > TAMANO_TABLERO or columna < 0 or columna > TAMANO_TABLERO 
+            if fila < 0 or fila > TAMANO_TABLERO or columna < 0 or columna > TAMANO_TABLERO:
                 raise ValueError(MENSAJES["invalido"]) #error_concreto de fuera de rango
 
             if (fila,columna) in casillas_disparadas_jugador:
                 raise ValueError(MENSAJES["repetido"]) #error_concreto de casilla repetida
-            
+
             casillas_disparadas_jugador.append((fila, columna))
             return (fila, columna)
-            
+
         except ValueError as error_concreto:
             print(error_concreto)
             print("El disparo tiene que ser un número, caer dentro del tablero y no vale repetir") #Duda: ¿queremos que saque esto siempre?
@@ -39,10 +38,10 @@ def pedir_coordenadas():
 casillas_disparadas_maquina=list() #Creamos una lista donde vamos a acumular las casillas donde dispara la máquina
 def disparo_aleatorio():
     while True:
-            fila = np.random.randint(fila_min, fila_max)
-            columna = np.random.randint(columna_min, columna_max)
-        
-            if (fila,columna) not in casillas_disparadas_maquina:            
+            fila = np.random.randint(0,TAMANO_TABLERO )
+            columna = np.random.randint(0, TAMANO_TABLERO)
+
+            if (fila,columna) not in casillas_disparadas_maquina:
                 casillas_disparadas_maquina.append((fila, columna))
             return (fila, columna)
 
@@ -102,5 +101,3 @@ def mostrar_instrucciones():
         print("repetida o escribes coordenadas inválidas, el radar te avisará")
         print("sin penalizarte. ¡Ningún error tonto romperá el juego! ]")
         print("=" * 60)
-    else:
-        print("Ok, si no tienes dudas, ¡seguimos con el juego!")
