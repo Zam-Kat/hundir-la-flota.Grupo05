@@ -7,9 +7,9 @@ Este proyecto trata del clasico y muy conocido "Hundir La Flota" o como me gusta
 
 • Los simbolos del tablero son los siguientes:
 - "💧" los cuales contienen agua que aun no han sido disparados.
-- "⬛" serian los Barcos
+- "⬜" serian los Barcos
 - "💥" para el impacto en el Barco
-- "🛟" para marcar los espacios donde ya se han disparado y fallado.
+- "👎" para marcar los espacios donde ya se han disparado y fallado.
 
 • Las dependencias necesarias son:
 - **requirements.txt**
