@@ -37,22 +37,22 @@ class Tablero:
 
           Argumentos:
             casillas: lista de tuplas [int, int]. Primero se comprueba que la casilla donde queremos incorporar el barco existe.
-            Luego que en una zona 3x3 no existe ningún otro elemento "barco". 
+            Luego que en la zona alrededor del barco no existe ningún otro elemento "barco". 
 
             Returns:
               bool: True si se puede colocar, False para el caso contrario.
         """
 
-        for fila, columna in casillas:
+        filas = [f for f, _ in casillas]
+        columnas = [c for _, c in casillas]
             # Comprobación dentro de tablero
-            if not (0 <= fila < self.tamano and 0 <= columna < self.tamano):
-                return False
-            # Comprobación zona 3x3 alrededor de la casilla
-            fila0, fila1 = max(fila -1, 0), min(fila + 2, self.tamano)
-            columna0, columna1 = max(columna -1, 0), min(columna + 2, self.tamano)
-            if (self.tablero[fila0:fila1, columna0:columna1] == SIMBOLOS["barco"]).any():
-                return False
-        return True
+        if min(filas) < 0 or min(columnas) < 0 \
+            or max(filas) >= self.tamano or max(columnas) >= self.tamano:
+            return False
+        # Comprobación alrededor del barco
+        zona = self.tablero[max(min(filas) -1,0):max(filas) + 2,
+                            max(min(columnas) -1,0):max(columnas) + 2]
+        return not (zona == SIMBOLOS["barco"]).any()
 
     def colocar_un_barco(self, barco, eslora, max_intentos=100):
         """
@@ -211,7 +211,5 @@ class Tablero:
         # Marco para los laterales para ayudar con la visualización (help IA)
         for i, fila in enumerate(matriz):
             print(f"{i:>2}  |" + " ".join(fila) + "|")
-        
-    # ------------------testeo----------------------------
 
     
