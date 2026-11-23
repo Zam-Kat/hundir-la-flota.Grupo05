@@ -49,7 +49,6 @@ while True: # Cada vuelta del bucle es un disparo
         barcos_maquina = len(tablero_maquina.barcos_restantes()) # Contador de barcos que le quedan a la máquina
         print(f"A la máquina le quedan {barcos_maquina} barcos\n")
 
-        tablero_jugador.mostrar()
         tablero_maquina.mostrar(ocultar_barcos = True)
 
         disparo_jugador = pedir_coordenadas()
@@ -84,6 +83,7 @@ while True: # Cada vuelta del bucle es un disparo
         print(MENSAJES["turno_maquina"].center(60))
         print("=" * 60 + "\n")
 
+        tablero_jugador.mostrar()
 
         disparo_maquina = disparo_aleatorio()
 
