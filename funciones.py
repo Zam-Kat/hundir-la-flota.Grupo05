@@ -20,7 +20,7 @@ def pedir_coordenadas():
         try:
             fila = int(input("Coordenadas fila:"))
             columna = int(input("Coordenadas columna:")) #Unificar input fila y columna
-            if fila < 0 or fila > TAMANO_TABLERO or columna < 0 or columna > TAMANO_TABLERO:
+            if fila < 0 or fila >= TAMANO_TABLERO or columna < 0 or columna >= TAMANO_TABLERO:
                 raise ValueError(MENSAJES["invalido"]) #error_concreto de fuera de rango
 
             if (fila,columna) in casillas_disparadas_jugador:
@@ -43,7 +43,7 @@ def disparo_aleatorio():
 
             if (fila,columna) not in casillas_disparadas_maquina:
                 casillas_disparadas_maquina.append((fila, columna))
-            return (fila, columna)
+                return (fila, columna)
 
 
 
